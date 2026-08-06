@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "videotranscriptor"
+version = "0.1.0"
+description = "Extract audio from video and transcribe it with Deepgram (cloud) or NVIDIA Canary 1B (local)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "DavidJHub" }]
+keywords = ["transcription", "asr", "deepgram", "canary", "nemo", "ffmpeg"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+
+dependencies = [
+  "requests>=2.28",
+]
+
+[project.optional-dependencies]
+# Cloud backend. Only needs HTTP, which is already in the base deps, but the
+# extra is kept so `pip install videotranscriptor[deepgram]` reads naturally.
+deepgram = []
+# Local backend. NeMo pulls in torch and a large dependency tree; it is kept
+# out of the base install on purpose.
+local = [
+  "nemo_toolkit[asr]>=1.23",
+  "torch>=2.0",
+]
+dev = [
+  "pytest>=7.0",
+]
+
+[project.scripts]
+videotranscriptor = "videotranscriptor.cli:main"
+vtx = "videotranscriptor.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/DavidJHub/VideoTranscriptor"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
